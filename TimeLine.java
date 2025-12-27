@@ -1,0 +1,166 @@
+import Enums.*;
+
+import java.util.*;
+
+class TimeLine {
+    private static final List<Event> EVENTS = new ArrayList<>();
+    private static final List<Person> PERSONS = new ArrayList<>();
+    private static final List<Place> PLACES = new ArrayList<>();
+
+    private TimeLine() {
+    }
+
+    public static void addPlace(Place place) {
+        if (place != null && !PLACES.contains(place)) {
+            PLACES.add(place);
+        }
+    }
+
+    public static Place getPlace(Object place){
+        for (Place pl: PLACES){
+            if (Objects.equals(pl,place)){
+                return pl;
+            }
+        }
+        return null;
+    }
+
+    public static List<Place> getAllPlace() {
+        return new ArrayList<>(PLACES);
+    }
+
+    public static void addPe(Person person) {
+        if (person != null && !PERSONS.contains(person)) {
+            PERSONS.add(person);
+        }
+    }
+
+    public static Person getPe(Object person){
+        for (Person pe: PERSONS){
+            if (Objects.equals(pe,person)){
+                return pe;
+            }
+        }
+        return null;
+    }
+
+    public static List<Person> getAllPe() {
+        return new ArrayList<>(PERSONS);
+    }
+
+    public static void addEv(Event event) {
+        if (event != null) {
+            EVENTS.add(event);
+        }
+    }
+
+    public static Event getEv(Object event){
+        for (Event ev: EVENTS){
+            if (Objects.equals(ev,event)){
+                return ev;
+            }
+        }
+        return null;
+    }
+
+    public static List<Event> getAllEv() {
+        return new ArrayList<>(EVENTS);
+    }
+
+    public static void main(String[] args) {
+        Random rand = new Random();
+        Place bloodHouse = new Place(PlaceType.BLOOD_HOUSE);
+        Place outside = new Place(PlaceType.OUTSIDE);
+        Horse charcoal = new Horse(
+                "Charcoal",
+                outside
+        );
+        outside.addHorse(charcoal);
+        TimeLine.addPlace(bloodHouse);
+        TimeLine.addPlace(outside);
+
+        MainCharacter peter = new MainCharacter();
+        Hostess barlow = new Hostess();
+        Lord gildow = new Lord();
+
+
+        TimeLine.addPe(peter);
+        TimeLine.addPe(peter); //repeat
+        TimeLine.addPe(barlow);
+        TimeLine.addPe(gildow);
+
+
+        bloodHouse.addPerson(barlow);
+        bloodHouse.addPerson(peter);
+
+        peter.addRelationship(barlow,ERelationship.FRIENDS);
+
+
+        //TODO изменить рандом
+        if (rand.nextInt(11)<10){
+            Event fight = new Event(
+                    EventName.FIGHT,
+                    new Person[]{gildow},
+                    Nature.BAD,
+                    outside);
+            TimeLine.addEv(fight);
+            // if fight happens
+            if (TimeLine.getAllEv().contains(fight)){
+                //adding places
+                Place lordHouse = new Place(PlaceType.LORD_HOUSE);
+                TimeLine.addPlace(lordHouse);
+
+                //adding chars
+                Skipper jeremy = new Skipper();
+                TimeLine.addPe(jeremy);
+
+                //setting chars to places
+                outside.addPerson(jeremy);
+
+                //setting relationships
+                peter.addRelationship(jeremy,ERelationship.FRIENDS);
+                jeremy.addRelationship(gildow,ERelationship.FRIENDS);
+
+                //  main part
+                Clothes petersClothes = new Clothes(
+                        HeadDress.NONE,
+                        BodyClothes.JACKET,
+                        LegsClothes.PANTS,
+                        Boots.SHOES);
+
+                jeremy.knockToDoor(bloodHouse);
+
+
+
+                peter.askAboutEvTo(peter.getEvents().get(peter.getEvents().size()-1), jeremy);
+                jeremy.doActionTo(Action.EXTEND_HANDS,peter);
+                jeremy.askToGoToBy(lordHouse,peter,MoveType.ON_HORSE);
+                peter.searchForClothes(bloodHouse, petersClothes);
+                peter.setClothesFromInv(petersClothes);
+                peter.searchForTools(bloodHouse,Tool.SYRGERY_TOOLS);
+                peter.goToBy(outside,MoveType.ON_LEGS);
+                jeremy.onHorse(charcoal);
+                peter.onHorse(charcoal);
+                charcoal.goToBy(lordHouse,MoveType.ON_LEGS);
+                charcoal.goToBy(bloodHouse,MoveType.ON_LEGS);
+
+                for (Place pl: TimeLine.getAllPlace()){
+                    System.out.println(pl+" "+pl.getHorses());
+                    System.out.println(pl+" "+pl.getPersons());
+                }
+
+
+
+            }
+        } else {
+            System.out.println(peter+" спокойно просыпается");
+            barlow.cook(Food.CHICKEN);
+            barlow.putOnTable(Food.CHICKEN);
+            peter.eat(Food.CHICKEN);
+        }
+
+
+
+    }
+
+}
