@@ -1,4 +1,5 @@
 import Enums.*;
+import jdk.jfr.EventType;
 
 import java.util.*;
 
@@ -54,9 +55,9 @@ class TimeLine {
         }
     }
 
-    public static Event getEv(Object event){
+    public static Event getEv(EventName eventName){
         for (Event ev: EVENTS){
-            if (Objects.equals(ev,event)){
+            if (ev.evName() == eventName){
                 return ev;
             }
         }
@@ -96,8 +97,8 @@ class TimeLine {
         peter.addRelationship(barlow,ERelationship.FRIENDS);
 
 
-        //TODO изменить рандом
-        if (rand.nextInt(11)<10){
+
+        if (rand.nextInt(5)<10){
             Event fight = new Event(
                     EventName.FIGHT,
                     new Person[]{gildow},
@@ -106,6 +107,7 @@ class TimeLine {
             TimeLine.addEv(fight);
             // if fight happens
             if (TimeLine.getAllEv().contains(fight)){
+
                 //adding places
                 Place lordHouse = new Place(PlaceType.LORD_HOUSE);
                 TimeLine.addPlace(lordHouse);
@@ -113,6 +115,7 @@ class TimeLine {
                 //adding chars
                 Skipper jeremy = new Skipper();
                 TimeLine.addPe(jeremy);
+
 
                 //setting chars to places
                 outside.addPerson(jeremy);
@@ -122,6 +125,9 @@ class TimeLine {
                 jeremy.addRelationship(gildow,ERelationship.FRIENDS);
 
                 //  main part
+                System.out.println("Произошла "+ fight);
+                gildow.getInjury();
+
                 Clothes petersClothes = new Clothes(
                         HeadDress.NONE,
                         BodyClothes.JACKET,
@@ -129,25 +135,21 @@ class TimeLine {
                         Boots.SHOES);
 
                 jeremy.knockToDoor(bloodHouse);
-
-
-
                 peter.askAboutEvTo(peter.getEvents().get(peter.getEvents().size()-1), jeremy);
                 jeremy.doActionTo(Action.EXTEND_HANDS,peter);
-                jeremy.askToGoToBy(lordHouse,peter,MoveType.ON_HORSE);
-                peter.searchForClothes(bloodHouse, petersClothes);
-                peter.setClothesFromInv(petersClothes);
-                peter.searchForTools(bloodHouse,Tool.SYRGERY_TOOLS);
-                peter.goToBy(outside,MoveType.ON_LEGS);
-                jeremy.onHorse(charcoal);
-                peter.onHorse(charcoal);
-                charcoal.goToBy(lordHouse,MoveType.ON_LEGS);
-                charcoal.goToBy(bloodHouse,MoveType.ON_LEGS);
-
-                for (Place pl: TimeLine.getAllPlace()){
-                    System.out.println(pl+" "+pl.getHorses());
-                    System.out.println(pl+" "+pl.getPersons());
+                if (!peter.getPlace().equals(lordHouse)){
+                    jeremy.askToGoToBy(lordHouse,peter,MoveType.ON_HORSE);
+                    peter.searchForClothes(bloodHouse, petersClothes);
+                    peter.setClothesFromInv(petersClothes);
+                    peter.searchForTools(bloodHouse,Tool.SYRGERY_TOOLS);
+                    peter.assignmentTo(Assignment.COOK_SALAD,barlow);
+                    peter.goToBy(outside,MoveType.ON_LEGS);
+                    jeremy.onHorse(charcoal);
+                    peter.onHorse(charcoal);
+                    charcoal.goToBy(lordHouse,MoveType.ON_LEGS);
                 }
+
+
 
 
 

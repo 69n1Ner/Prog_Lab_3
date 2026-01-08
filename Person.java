@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public abstract class Person implements Movable {
+public abstract class Person implements MovablePerson, Rider {
     private Mood mood;
     private ArrayList<Relationship> relationships;
     private int hunger;
@@ -40,59 +40,70 @@ public abstract class Person implements Movable {
         return name;
     }
 
-
-    public void onHorse(Horse horse){
-        horse.addToPersonList(this);
-        System.out.println(this+" садится на "+ horse);
+    @Override
+    public void toHorse(Horse horse) {
+        if (this.getPlace().equals(horse.getPlace())) {
+            horse.addToPersonList(this);
+            System.out.println(this + " садится на " + horse);
+        } else {
+            System.out.println(this + " находится в " + this.getPlace()+
+                    ", а "+horse + " в "+ horse.getPlace());
+        }
     }
 
+    //TODO дождаться ответа Мартина
     @Override
-    public void goToBy(Place place, MoveType moveType) {
-
-        if (moveType == MoveType.ON_HORSE) {
-            if (!this.getPlace().getHorses().isEmpty()){
-                if (this.getPlace().getHorses().get(0).ansToGo(this)) {
-                    this.remPlToPlace(this.getPlace(), place);
-                    System.out.println(this + " идет в " + place + " " + moveType);
+    public void goTo(Place place, Horse horse) {
+        if (!this.getPlace().getHorses().isEmpty() && this.getPlace().getHorses().contains(horse)) {
+            if (horse.getPersons().contains(this)) {
+                if (this.isReady()){
+                    this.remPlToPlace(this.getPlace(),place);
+                    horse.remPlToPlace(horse.getPlace(),place);
+                    System.out.println(this + " едет в "+ place+" на " + horse);
+                } else {
+                    System.out.println(this + " не готов ехать: "); // TODO добавить причины
                 }
-            }else {
-                System.out.println("В "+this.getPlace()+ " нет лошадей");
+            } else {
+                System.out.println(this + " не сидит на "+ horse);
             }
         } else {
-            moveType = MoveType.ON_LEGS;
-            this.remPlToPlace(this.getPlace(), place);
-            System.out.println(this + " идет в " + place + " " + moveType);
+            System.out.println(this.getPlace() + " не сожержит лошадей, либо только " + horse);
         }
     }
 
     @Override
-    public void askToGoToBy(Place place, Movable whoAsked, MoveType moveType) {
-        System.out.println(this+" предлагает "+whoAsked+ " отправится в "+place+" "+moveType);
+    public void goTo(Place place) {
+        if (this.isReady()){
+            this.remPlToPlace(this.getPlace(),place);
+            System.out.println(this + " идет в "+ place);
+        } else {
+            System.out.println(this + " не готов идти: "); // TODO добавить причины
+        }
 
-        if (whoAsked.ansToGo(this) &&
-                moveType == MoveType.ON_HORSE &&
-                this.getPlace().getHorses().get(0).ansToGo(this) &&
-                this.getPlace().getHorses().get(0).ansToGo(whoAsked)){
-            System.out.println("Все готовы к выезду!");
+    }
 
-        } else if (moveType == MoveType.ON_LEGS &&
-                whoAsked.ansToGo(this)
-                ){
-            System.out.println("Все готовы к выходу!");
+    @Override
+    public void askToGoTo(Place place, MovablePerson person, Horse horse) {
+        System.out.println(this + " предлагает " + person + " отправится в " + place + " на " + horse);
+        if (this.isReady() && person.isReady()
+                && horse.getPersons().contains(this)
+                && horse.getPersons().contains(person)) {
+            System.out.println("Все готовы!");
         }
         else {
-            if (!this.getPlace().getHorses().get(0).ansToGo(whoAsked)){
-                System.out.println(whoAsked +" пока не может найти лошадь!");
-
-            } else {
-                System.out.println(whoAsked +" пока не готов(");
-            }
+            System.out.println("Кто то не готов(");
         }
-    }
 
+    }
     @Override
-    public boolean ansToGo(Movable whoAnswered) {
-        return true;
+    public void askToGoTo(Place place, MovablePerson person){
+        System.out.println(this + " предлагает " + person + " отправится в " + place);
+        if (this.isReady() && person.isReady()) {
+            System.out.println("Все готовы!");
+        }
+        else {
+            System.out.println("Кто то не готов(");
+        }
     }
 
     private void tellAboutEvTo(Event event) {
@@ -152,15 +163,15 @@ public abstract class Person implements Movable {
                     this + " о событии " + event.evName());
             person.tellAboutEvTo(event);
 
-            if (event.evNature() == Nature.BAD){
+            if (event.evNature() == Nature.BAD) {
                 this.setMood(Mood.SAD);
-                System.out.println(event.evName()+ " влияет на "+this+". Его настроение стало "+Mood.SAD);
+                System.out.println(event.evName() + " влияет на " + this + ". Его настроение стало " + Mood.SAD);
             }
         }
     }
 
     public void heal(Lord patient) {
-        if (this.getProfession() != Profession.DOCTOR) {
+        if (this.getProfession() != Profession.DOCTOR && this.getPlace().equals(patient.getPlace())) {
             System.out.println(this + " не врач!");
             return;
         }
@@ -170,7 +181,7 @@ public abstract class Person implements Movable {
             return;
         }
         System.out.println(this + " лечит " + patient);
-        patient.heal();
+        patient.setHealthBy(Health.GOOD, this);
     }
 
     @Override
@@ -233,10 +244,10 @@ public abstract class Person implements Movable {
         this.place = place;
     }
 
-    private void remPlToPlace(Place pl, Place place) {
-        pl.remPerson(this);
-        place.addPerson(this);
-        this.setPlace(place);
+    private void remPlToPlace(Place current, Place future) {
+        current.remPerson(this);
+        future.addPerson(this);
+        this.setPlace(future);
     }
 
     public Profession getProfession() {
@@ -255,12 +266,11 @@ public abstract class Person implements Movable {
         this.clothesInventory.add(clothes);
     }
 
-    //TODO добавить исключение с инвентарем
     public void setClothesFromInv(Clothes clothes) {
         this.clothesInventory.add(this.clothes);
         this.clothes = clothesInventory.get(0);
         this.clothesInventory.remove(0);
-        System.out.println(this+" переодевается в "+clothes);
+        System.out.println(this + " переодевается в " + clothes);
     }
 
     public void setName(String name) {

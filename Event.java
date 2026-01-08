@@ -10,12 +10,7 @@ public record Event(EventName evName,
                     Place place) {
     @Override
     public String toString() {
-        return "Event[" +
-                "evName=" + evName +
-                ", evPersons=" + Arrays.toString(evPersons) +
-                ", evNature=" + evNature +
-                ", place=" + place +
-                ']';
+        return evName.getEventName();
     }
 
     @Override

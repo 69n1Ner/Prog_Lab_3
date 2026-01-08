@@ -1,16 +1,12 @@
-import Enums.MoveType;
-import Enums.PlaceType;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Horse implements Movable{
     private String name;
-    private List<Person> personList;
+    private ArrayList<MovablePerson> personList;
     private Place place;
 
-    public Horse(String name,Place place, List<Person> personList) {
+    public Horse(String name,Place place, ArrayList<MovablePerson> personList) {
         this.name = name;
         this.personList = personList;
         this.place = place;
@@ -26,42 +22,11 @@ public class Horse implements Movable{
     }
 
     @Override
-    public void goToBy(Place place, MoveType moveType) {
-        for (Person pe: this.getPersonList()){
-            this.getPlace().remPerson(pe);
-            pe.setPlace(place);
-            place.addPerson(pe);
-        }
-        this.remPlToPlace(this.getPlace(),place);
-
-
-        String riders = String.join(", ",
-                this.getPersonList().stream()
-                        .map(Person::getName)
-                        .toArray(String[]::new)
-        );
-
-        System.out.println(this + " едет с " + riders + " в " + place);
+    public void goTo(Place place){
+        
     }
 
-    @Override
-    public void askToGoToBy(Place place, Movable person,MoveType moveType){
-        throw new IllegalArgumentException("Лошадь не может упрашивать человека");
-    }
-
-    @Override
-    public boolean ansToGo(Movable movable){
-        if (movable instanceof Horse){
-            throw new IllegalArgumentException("Лошадь не может отвечать лошади");
-        }
-        if (this.personList.contains(movable)) {
-            return true;
-        }
-        System.out.println(movable + " не сидит на "+this);
-        return false;
-    }
-
-    public List<Person> getPersonList() {
+    public ArrayList<MovablePerson> getPersons(){
         return personList;
     }
 

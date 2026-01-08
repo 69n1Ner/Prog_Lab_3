@@ -34,7 +34,6 @@ public class Lord extends Person{
 
 
 
-//TODO отсюда добавить рандом
     public void getInjury(){
         if (this.health!=Health.INJURY){
             this.health = Health.INJURY;
@@ -43,13 +42,9 @@ public class Lord extends Person{
         }
     }
 
-    public void heal() {
-        if (this.health == Health.INJURY) {
-            this.health = Health.GOOD;
-            this.setMood(Mood.CALM);
-            System.out.println(this + " был вылечен!");
-        } else {
-            System.out.println(this + " и так здоров.");
+    public void setHealthBy(Health health,Person person){
+        if (person.getProfession() == Profession.DOCTOR){
+            this.health = health;
         }
     }
 

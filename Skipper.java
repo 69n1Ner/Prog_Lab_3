@@ -33,7 +33,6 @@ public class Skipper extends Person implements Actionable{
 
         if (this.getPlace().getPlaceType() == PlaceType.OUTSIDE) {
 
-            //TODO мб добавить другие места для стука
             String knockable = " ";
             for (PlaceObject o : place.getPlaceObjects()) {
                 if (o == PlaceObject.DOOR) {
@@ -48,7 +47,7 @@ public class Skipper extends Person implements Actionable{
                     Nature.BAD,
                     TimeLine.getPlace(new Place(PlaceType.LORD_HOUSE))
             );
-
+            this.addEvent(doorKnock);
             TimeLine.addEv(doorKnock);
             for (Person pe: place.getPersons()){
                     pe.setMood(Mood.WORRIED);
@@ -66,18 +65,24 @@ public class Skipper extends Person implements Actionable{
     }
 
     public boolean doActionTo(Action action,Actionable person) {
-        //TODO изменить рандом
-        if (new Random().nextInt(11) < 10) {
+        if (new Random().nextInt(11) < 5) {
             if (action == Action.EXTEND_HANDS){
-                System.out.println(this + " " + action);
-                person.doActionTo(Action.EVADE,this);
+                System.out.println(this + " " + action+" к "+person+" чтобы быстрее он быстрее вышел");
+                if (!person.doActionTo(Action.EVADE,this)){
+                    Person pers =  (Person) person;
+                    System.out.println(this+" забирает "+ pers + ". Они собираются в " +TimeLine.getEv(EventName.HELP_ME).place().getPlaceType());
+                    System.out.println(pers+" даже не оделся и не собрал вещи! На нем сейчас "+pers.getClothes());
+                    pers.goToBy(TimeLine.getPlace(this.getPlace()),MoveType.ON_LEGS);
+                    pers.onHorse(TimeLine.getPlace(this.getPlace()).getHorses().get(0));
+                    this.onHorse(TimeLine.getPlace(this.getPlace()).getHorses().get(0));
+                    TimeLine.getPlace(this.getPlace()).getHorses().get(0).goToBy(TimeLine.getEv(EventName.HELP_ME).place(),MoveType.ON_LEGS);
+                };
                 return true;
             }
 
             System.out.println(this + " " + action);
             return true;
         } else {
-            System.out.println(this + " не " + action);
             return false;
         }
     }

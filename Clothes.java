@@ -26,12 +26,14 @@ public class Clothes {
 
     @Override
     public String toString() {
-        if (head == HeadDress.NONE){
-            return body+" "+legs+" "+boots;
-        } else if (head == HeadDress.NONE && legs == LegsClothes.NONE){
-            return body+" "+boots;
+        if (head == HeadDress.NONE && boots != Boots.NONE){
+            return body+","+legs+","+boots;
+        } else if (head == HeadDress.NONE && legs == LegsClothes.NONE) {
+            return body + "," + boots;
+        }else if (head == HeadDress.NONE && boots == Boots.NONE ){
+            return body+","+legs;
         } else {
-            return head+" "+body+" "+legs+" "+boots;
+            return head+","+body+","+legs+","+boots;
         }
     }
 

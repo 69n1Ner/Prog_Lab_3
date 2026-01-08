@@ -3,7 +3,7 @@ import Enums.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hostess extends Person{
+public class Hostess extends Person implements Assignable{
     private List<Food> foodInventory;
 
     public Hostess(String name,
@@ -67,5 +67,16 @@ public class Hostess extends Person{
 
     public List<Food> getFoodInventory() {
         return foodInventory;
+    }
+
+    @Override
+    public void doAssignment(Assignment assignment) {
+        switch (assignment){
+            case COOK_CHICKEN -> this.cook(Food.CHICKEN);
+            case COOK_FISH -> this.cook(Food.FISH);
+            case COOK_CORN -> this.cook(Food.CORN);
+            case COOK_SALAD -> this.cook(Food.SALAD);
+            default -> System.out.println(this+" занимается "+assignment);
+        }
     }
 }

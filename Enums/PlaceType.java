@@ -1,5 +1,4 @@
 package Enums;
-// TODO переделать, добавить класс Place, в котором есть PlaceType и ObjectPlace
 public enum PlaceType {
     BLOOD_HOUSE("Дом Питера Блада"),
     OUTSIDE("Улица"),

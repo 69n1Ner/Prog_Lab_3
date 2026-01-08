@@ -2,7 +2,7 @@ import Enums.*;
 
 import java.util.Random;
 
-public class MainCharacter extends Person implements Actionable {
+public class MainCharacter extends Person implements Actionable{
     private Tool tool;
 
     public MainCharacter(String name,
@@ -29,6 +29,11 @@ public class MainCharacter extends Person implements Actionable {
                         Boots.NONE)
                 , Gender.MALE
         );
+    }
+
+    public void assignmentTo(Assignment assignment,Assignable person){
+        System.out.println(this+" поручает "+person +" "+ assignment);
+        person.doAssignment(assignment);
     }
 
     public void searchForClothes(Place place, Clothes clothes) {
