@@ -16,7 +16,7 @@ public abstract class Rider extends Person{
         super(name, place, mood, hunger, profession, clothes, gender);
         this.horse = horse;
     }
-
+    //tmp
     public void toHorse(Horse horse){
         if (this.getPlace().equals(horse.getPlace())) {
             horse.addToPersonList(this);
