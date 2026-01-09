@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public abstract class Person implements MovablePerson, Rider {
+public abstract class Person implements MovablePerson {
     private Mood mood;
     private ArrayList<Relationship> relationships;
     private int hunger;
@@ -41,37 +41,6 @@ public abstract class Person implements MovablePerson, Rider {
     }
 
     @Override
-    public void toHorse(Horse horse) {
-        if (this.getPlace().equals(horse.getPlace())) {
-            horse.addToPersonList(this);
-            System.out.println(this + " садится на " + horse);
-        } else {
-            System.out.println(this + " находится в " + this.getPlace()+
-                    ", а "+horse + " в "+ horse.getPlace());
-        }
-    }
-
-    //TODO дождаться ответа Мартина
-    @Override
-    public void goTo(Place place, Horse horse) {
-        if (!this.getPlace().getHorses().isEmpty() && this.getPlace().getHorses().contains(horse)) {
-            if (horse.getPersons().contains(this)) {
-                if (this.isReady()){
-                    this.remPlToPlace(this.getPlace(),place);
-                    horse.remPlToPlace(horse.getPlace(),place);
-                    System.out.println(this + " едет в "+ place+" на " + horse);
-                } else {
-                    System.out.println(this + " не готов ехать: "); // TODO добавить причины
-                }
-            } else {
-                System.out.println(this + " не сидит на "+ horse);
-            }
-        } else {
-            System.out.println(this.getPlace() + " не сожержит лошадей, либо только " + horse);
-        }
-    }
-
-    @Override
     public void goTo(Place place) {
         if (this.isReady()){
             this.remPlToPlace(this.getPlace(),place);
@@ -82,19 +51,6 @@ public abstract class Person implements MovablePerson, Rider {
 
     }
 
-    @Override
-    public void askToGoTo(Place place, MovablePerson person, Horse horse) {
-        System.out.println(this + " предлагает " + person + " отправится в " + place + " на " + horse);
-        if (this.isReady() && person.isReady()
-                && horse.getPersons().contains(this)
-                && horse.getPersons().contains(person)) {
-            System.out.println("Все готовы!");
-        }
-        else {
-            System.out.println("Кто то не готов(");
-        }
-
-    }
     @Override
     public void askToGoTo(Place place, MovablePerson person){
         System.out.println(this + " предлагает " + person + " отправится в " + place);

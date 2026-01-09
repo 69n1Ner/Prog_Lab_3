@@ -3,15 +3,17 @@ import Enums.*;
 import java.util.Objects;
 import java.util.Random;
 
-public class Skipper extends Person implements Actionable{
+public class Skipper extends Rider implements Actionable{
+
     public Skipper(String name,
                    Place place,
                    Mood mood,
                    int hunger,
                    Profession profession,
                    Clothes clothes,
-                   Gender gender) {
-        super(name,place, mood, hunger, profession, clothes, gender);
+                   Gender gender,
+                   Horse horse) {
+        super(name,place, mood, hunger, profession, clothes, gender,horse);
     }
 
     public Skipper() {
@@ -26,11 +28,11 @@ public class Skipper extends Person implements Actionable{
                         BodyClothes.JACKET,
                         LegsClothes.SHORTS,
                         Boots.SANDALS),
-                Gender.MALE);
+                Gender.MALE,
+                null);
     }
 
     public void knockToDoor(Place place) {
-
         if (this.getPlace().getPlaceType() == PlaceType.OUTSIDE) {
 
             String knockable = " ";
@@ -70,13 +72,19 @@ public class Skipper extends Person implements Actionable{
                 System.out.println(this + " " + action+" к "+person+" чтобы быстрее он быстрее вышел");
                 if (!person.doActionTo(Action.EVADE,this)){
                     Person pers =  (Person) person;
-                    System.out.println(this+" забирает "+ pers + ". Они собираются в " +TimeLine.getEv(EventName.HELP_ME).place().getPlaceType());
-                    System.out.println(pers+" даже не оделся и не собрал вещи! На нем сейчас "+pers.getClothes());
-                    pers.goToBy(TimeLine.getPlace(this.getPlace()),MoveType.ON_LEGS);
-                    pers.onHorse(TimeLine.getPlace(this.getPlace()).getHorses().get(0));
-                    this.onHorse(TimeLine.getPlace(this.getPlace()).getHorses().get(0));
-                    TimeLine.getPlace(this.getPlace()).getHorses().get(0).goToBy(TimeLine.getEv(EventName.HELP_ME).place(),MoveType.ON_LEGS);
-                };
+                    System.out.println(this+" забирает "+ person + ". Они собираются в " +TimeLine.getEv(EventName.HELP_ME).place().getPlaceType());
+                    System.out.println(person+" даже не оделся и не собрал вещи! На нем сейчас "+ pers.getClothes());
+                    if (pers instanceof Rider) {
+                        Rider rider = (Rider) pers;
+                        pers.goTo(this.getPlace());
+                        this.toHorse(TimeLine.getPlace(this.getPlace()).getHorses().get(0));
+                        rider.toHorse(this.getHorse());
+                        this.goTo(TimeLine.getEv(EventName.HELP_ME).place(),this.getHorse());
+                    } else {
+                        this.goTo(TimeLine.getEv(EventName.HELP_ME).place());
+                        pers.goTo(TimeLine.getEv(EventName.HELP_ME).place());
+                    }
+                }
                 return true;
             }
 

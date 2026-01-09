@@ -2,7 +2,7 @@ import Enums.*;
 
 import java.util.Random;
 
-public class MainCharacter extends Person implements Actionable{
+public class MainCharacter extends Rider implements Actionable{
     private Tool tool;
 
     public MainCharacter(String name,
@@ -11,8 +11,9 @@ public class MainCharacter extends Person implements Actionable{
                          int hunger,
                          Profession profession,
                          Clothes clothes,
-                         Gender gender) {
-        super(name, place,mood, hunger, profession, clothes, gender);
+                         Gender gender,
+                         Horse horse) {
+        super(name, place,mood, hunger, profession, clothes, gender,horse);
     }
 
     public MainCharacter() {
@@ -26,8 +27,9 @@ public class MainCharacter extends Person implements Actionable{
                         HeadDress.NONE,
                         BodyClothes.NIGHTY,
                         LegsClothes.SHORTS,
-                        Boots.NONE)
-                , Gender.MALE
+                        Boots.NONE),
+                Gender.MALE,
+                null
         );
     }
 
@@ -75,16 +77,5 @@ public class MainCharacter extends Person implements Actionable{
         }
     }
 
-    @Override
-    public boolean ansToGo(Movable whoAnswered) {
-        if (this.getClothes().getBody() == BodyClothes.JACKET &&
-                this.getClothes().getLegs() == LegsClothes.PANTS &&
-                this.getClothes().getBoots() == Boots.SHOES &&
-                this.getTool() == Tool.SYRGERY_TOOLS) {
-            System.out.println(this + " оделся, взял инструменты и готов выдвигаться");
-            return true;
-        }
-        return false;
-    }
 
 }
