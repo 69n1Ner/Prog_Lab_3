@@ -42,13 +42,8 @@ public abstract class Person implements MovablePerson {
 
     @Override
     public void goTo(Place place) {
-        if (this.isReady()){
             this.remPlToPlace(this.getPlace(),place);
             System.out.println(this + " идет в "+ place);
-        } else {
-            System.out.println(this + " не готов идти: "); // TODO добавить причины
-        }
-
     }
 
     @Override
@@ -200,7 +195,7 @@ public abstract class Person implements MovablePerson {
         this.place = place;
     }
 
-    private void remPlToPlace(Place current, Place future) {
+    public void remPlToPlace(Place current, Place future) {
         current.remPerson(this);
         future.addPerson(this);
         this.setPlace(future);

@@ -93,36 +93,38 @@ class TimeLine {
 
         bloodHouse.addPerson(barlow);
         bloodHouse.addPerson(peter);
-
+        //Todo add relationships
         peter.addRelationship(barlow,ERelationship.FRIENDS);
 
+        //todo change random
+        if (rand.nextInt(11) < 11){
 
-        //TODO change random
-        if (rand.nextInt(10) < 10){
+
+            //adding places
+            Place lordHouse = new Place(PlaceType.LORD_HOUSE);
+            TimeLine.addPlace(lordHouse);
+
+            //adding chars
+            Skipper jeremy = new Skipper();
+            TimeLine.addPe(jeremy);
+
+
+            //setting chars to places
+            outside.addPerson(jeremy);
+
+            //setting relationships
+            peter.addRelationship(jeremy,ERelationship.FRIENDS);
+            jeremy.addRelationship(gildow,ERelationship.FRIENDS);
+
             Event fight = new Event(
                     EventName.FIGHT,
                     new Person[]{gildow},
                     Nature.BAD,
                     outside);
             TimeLine.addEv(fight);
-            // if fight happens
-            if (TimeLine.getAllEv().contains(fight)){
-
-                //adding places
-                Place lordHouse = new Place(PlaceType.LORD_HOUSE);
-                TimeLine.addPlace(lordHouse);
-
-                //adding chars
-                Skipper jeremy = new Skipper();
-                TimeLine.addPe(jeremy);
-
-
-                //setting chars to places
-                outside.addPerson(jeremy);
-
-                //setting relationships
-                peter.addRelationship(jeremy,ERelationship.FRIENDS);
-                jeremy.addRelationship(gildow,ERelationship.FRIENDS);
+            for (Person p: TimeLine.getAllPe()){
+                p.addEvent(fight);
+            }
 
                 //  main part
                 System.out.println("Произошла "+ fight);
@@ -147,19 +149,12 @@ class TimeLine {
                     peter.goTo(outside);
                     jeremy.toHorse(charcoal);
                     peter.toHorse(charcoal);
-                    try {
-                        charcoal.goTo(lordHouse);
-                    } catch (IllegalArgumentException e) {
-                        jeremy.goTo(lordHouse,jeremy.getHorse());
-                    }
+                    jeremy.goTo(lordHouse,jeremy.getHorse());
+                    jeremy.offHorse();
+                    peter.offHorse();
                 }
+                peter.heal(gildow);
 
-
-
-
-
-
-            }
         } else {
             System.out.println(peter+" спокойно просыпается");
             barlow.cook(Food.CHICKEN);

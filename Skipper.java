@@ -69,7 +69,7 @@ public class Skipper extends Rider implements Actionable{
     public boolean doActionTo(Action action,Actionable person) {
         if (new Random().nextInt(11) < 5) {
             if (action == Action.EXTEND_HANDS){
-                System.out.println(this + " " + action+" к "+person+" чтобы быстрее он быстрее вышел");
+                System.out.println(this + " " + action+" к "+person+" чтобы он быстрее вышел");
                 if (!person.doActionTo(Action.EVADE,this)){
                     Person pers =  (Person) person;
                     System.out.println(this+" забирает "+ person + ". Они собираются в " +TimeLine.getEv(EventName.HELP_ME).place().getPlaceType());

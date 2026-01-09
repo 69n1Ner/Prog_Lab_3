@@ -16,7 +16,6 @@ public abstract class Rider extends Person{
         super(name, place, mood, hunger, profession, clothes, gender);
         this.horse = horse;
     }
-    //tmp
     public void toHorse(Horse horse){
         if (this.getPlace().equals(horse.getPlace())) {
             horse.addToPersonList(this);
@@ -28,22 +27,32 @@ public abstract class Rider extends Person{
         }
     }
 
+    public void offHorse(){
+        if (this.getHorse() != null){
+            Horse horse = this.getHorse();
+            horse.remFromPersonList(this);
+            this.remHorse();
+            System.out.println(this+ " слезает с "+ horse);
+        }
+    }
+
      public Horse getHorse(){
             return horse;
         }
+
+    public void remHorse(){
+        this.horse = null;
+    }
+
     void setHorse(Horse horse){
-            this.horse = horse;
-        }
+        this.horse = horse;
+    }
+
     void goTo(Place place, Horse horse){
         if (!this.getPlace().getHorses().isEmpty() && this.getPlace().getHorses().contains(horse)) {
             if (horse.getPersons().contains(this)) {
-                if (this.isReady()){
-                    this.remPlToPlace(this.getPlace(),place);
-                    horse.remPlToPlace(horse.getPlace(),place);
-                    System.out.println(this + " едет в "+ place+" на " + horse);
-                } else {
-                    System.out.println(this + " не готов ехать: "); // TODO добавить причины
-                }
+                horse.goTo(place);
+                System.out.println(this + " едет в "+ place+" на " + horse);
             } else {
                 System.out.println(this + " не сидит на "+ horse);
             }
@@ -56,17 +65,8 @@ public abstract class Rider extends Person{
         if (this.isReady() && person.isReady()
                 && horse.getPersons().contains(this)
                 && horse.getPersons().contains(person)) {
-            System.out.println("Все готовы!");
+            System.out.println("Все готовы к отправлению!");
         }
-        else {
-            System.out.println("Кто то не готов(");
-        }
-    }
-
-    private void remPlToPlace(Place current, Place future) {
-        current.remPerson(this);
-        future.addPerson(this);
-        this.setPlace(future);
     }
 
 }

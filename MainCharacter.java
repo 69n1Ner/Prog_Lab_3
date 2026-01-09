@@ -62,8 +62,22 @@ public class MainCharacter extends Rider implements Actionable{
         }
     }
 
-    public Tool getTool() {
+    public Tool getTool(){
         return tool;
+    }
+
+    @Override
+    public boolean isReady(){
+        if (
+                this.getClothes().getBody() != BodyClothes.NIGHTY &&
+                this.getClothes().getBoots() != Boots.NONE &&
+                this.getClothes().getLegs() !=  LegsClothes.NONE &&
+                this.getTool() != null
+        ){
+           return true;
+        }
+        System.out.println(this+" не готов(");
+        return false;
     }
 
     @Override
