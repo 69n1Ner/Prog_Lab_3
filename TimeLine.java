@@ -97,8 +97,8 @@ class TimeLine {
         peter.addRelationship(barlow,ERelationship.FRIENDS);
 
 
-
-        if (rand.nextInt(5)<10){
+        //TODO change random
+        if (rand.nextInt(10) < 10){
             Event fight = new Event(
                     EventName.FIGHT,
                     new Person[]{gildow},
@@ -137,17 +137,23 @@ class TimeLine {
                 jeremy.knockToDoor(bloodHouse);
                 peter.askAboutEvTo(peter.getEvents().get(peter.getEvents().size()-1), jeremy);
                 jeremy.doActionTo(Action.EXTEND_HANDS,peter);
+                System.out.println("---"+peter.getPlace());
                 if (!peter.getPlace().equals(lordHouse)){
-                    jeremy.askToGoToBy(lordHouse,peter,MoveType.ON_HORSE);
+                    jeremy.askToGoTo(lordHouse,peter,charcoal);
                     peter.searchForClothes(bloodHouse, petersClothes);
                     peter.setClothesFromInv(petersClothes);
                     peter.searchForTools(bloodHouse,Tool.SYRGERY_TOOLS);
                     peter.assignmentTo(Assignment.COOK_SALAD,barlow);
-                    peter.goToBy(outside,MoveType.ON_LEGS);
-                    jeremy.onHorse(charcoal);
-                    peter.onHorse(charcoal);
-                    charcoal.goToBy(lordHouse,MoveType.ON_LEGS);
+                    peter.goTo(outside);
+                    jeremy.toHorse(charcoal);
+                    peter.toHorse(charcoal);
+                    try {
+                        charcoal.goTo(lordHouse);
+                    } catch (IllegalArgumentException e) {
+                        jeremy.goTo(lordHouse,jeremy.getHorse());
+                    }
                 }
+
 
 
 
