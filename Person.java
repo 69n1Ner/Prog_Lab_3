@@ -191,9 +191,18 @@ public abstract class Person implements MovablePerson {
     }
 
 
-    public void addRelationship(Person relWith, ERelationship relationship) {
+    public Person addRelationship(Person relWith, ERelationship relationship) {
         this.relationships.add(new Relationship(relWith, this, relationship));
         relWith.relationships.add(new Relationship(this, relWith, relationship));
+        return this;
+    }
+
+    public Person addRelationship(Person[] relWith, ERelationship relationship) {
+        for (Person p: relWith){
+            this.relationships.add(new Relationship(p, this, relationship));
+            p.relationships.add(new Relationship(this, p, relationship));
+        }
+        return this;
     }
 
 

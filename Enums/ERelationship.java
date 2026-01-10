@@ -4,6 +4,7 @@ public enum ERelationship {
     FRIENDS("Друзья"),
     ENEMIES("Враги"),
     FAMILIAR("Знакомые"),
+    UNFAMILIAR("Незнакомые"),
     COLLEAGUE("Коллеги");
 
     public final String relationship;

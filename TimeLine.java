@@ -94,11 +94,12 @@ class TimeLine {
 
         bloodHouse.addPerson(barlow);
         bloodHouse.addPerson(peter);
-        //Todo add relationships
-        peter.addRelationship(barlow,ERelationship.FRIENDS);
 
-        //todo change random
-        if (rand.nextInt(11) < 11){
+        peter.addRelationship(barlow,ERelationship.FRIENDS);
+        peter.addRelationship(gildow,ERelationship.UNFAMILIAR);
+
+
+        if (rand.nextInt(11) < 5){
 
 
             //adding places
@@ -125,6 +126,7 @@ class TimeLine {
             //setting relationships
             peter.addRelationship(jeremy,ERelationship.FRIENDS);
             jeremy.addRelationship(gildow,ERelationship.FRIENDS);
+            peter.addRelationship(new Person[]{tom,sam,bob},ERelationship.UNFAMILIAR);
 
             Event fight = new Event(
                     EventName.FIGHT,
@@ -142,11 +144,9 @@ class TimeLine {
                     Nature.NEUTRAL,
                     outside);
 
-            //todo добавить действия толпе к джереми через рандом,
-            // подвязать туда рассказывание джереми кому либо из толпы, всех людей брать из event
+
 
                 //  main part
-
                 gildow.getInjury();
 
                 Clothes petersClothes = new Clothes(
