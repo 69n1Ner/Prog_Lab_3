@@ -89,15 +89,9 @@ public class Place {
         return placeObjects;
     }
 
-    public void setPlaceObjects(ArrayList<PlaceObject> placeObjects) {
-        this.placeObjects = placeObjects;
-    }
 
     public PlaceType getPlaceType() {
         return placeType;
     }
 
-    public void setPlaceType(PlaceType placeType) {
-        this.placeType = placeType;
-    }
 }

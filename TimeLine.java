@@ -51,6 +51,7 @@ class TimeLine {
 
     public static void addEv(Event event) {
         if (event != null) {
+            System.out.println("Произошло "+event);
             EVENTS.add(event);
         }
     }
@@ -76,7 +77,7 @@ class TimeLine {
                 "Charcoal",
                 outside
         );
-        outside.addHorse(charcoal);
+        outside.addHorse(charcoal); //
         TimeLine.addPlace(bloodHouse);
         TimeLine.addPlace(outside);
 
@@ -107,10 +108,19 @@ class TimeLine {
             //adding chars
             Skipper jeremy = new Skipper();
             TimeLine.addPe(jeremy);
+            Citizen tom = new Citizen("Tom");
+            TimeLine.addPe(tom);
+            Citizen sam = new Citizen("Sam");
+            TimeLine.addPe(sam);
+            Citizen bob = new Citizen("Bob");
+            TimeLine.addPe(bob);
 
 
             //setting chars to places
             outside.addPerson(jeremy);
+            outside.addPerson(tom);
+            outside.addPerson(sam);
+            outside.addPerson(bob);
 
             //setting relationships
             peter.addRelationship(jeremy,ERelationship.FRIENDS);
@@ -126,8 +136,17 @@ class TimeLine {
                 p.addEvent(fight);
             }
 
+            Event crowd = new Event(
+                    EventName.WORRIED_CROWD,
+                    new Citizen[]{tom,sam,bob},
+                    Nature.NEUTRAL,
+                    outside);
+
+            //todo добавить действия толпе к джереми через рандом,
+            // подвязать туда рассказывание джереми кому либо из толпы, всех людей брать из event
+
                 //  main part
-                System.out.println("Произошла "+ fight);
+
                 gildow.getInjury();
 
                 Clothes petersClothes = new Clothes(
@@ -139,14 +158,30 @@ class TimeLine {
                 jeremy.knockToDoor(bloodHouse);
                 peter.askAboutEvTo(peter.getEvents().get(peter.getEvents().size()-1), jeremy);
                 jeremy.doActionTo(Action.EXTEND_HANDS,peter);
-                System.out.println("---"+peter.getPlace());
                 if (!peter.getPlace().equals(lordHouse)){
                     jeremy.askToGoTo(lordHouse,peter,charcoal);
+                    TimeLine.addEv(crowd);
+                    boolean flag = false;
+                    Person[] crowdPe = TimeLine.getEv(EventName.WORRIED_CROWD).evPersons();
+                    for (Person p: crowdPe){
+                        if (p instanceof Citizen){
+                             if (((Citizen) p).doActionTo(Action.EXTEND_HANDS,jeremy)){
+                                 p.askAboutEvTo(fight,jeremy);
+                                 flag = true;
+                                 break;
+                             }
+                        }
+                    }
+                    if (!flag){
+                        crowdPe[rand.nextInt(crowdPe.length)].askAboutEvTo(fight,jeremy);
+                    }
                     peter.searchForClothes(bloodHouse, petersClothes);
                     peter.setClothesFromInv(petersClothes);
                     peter.searchForTools(bloodHouse,Tool.SYRGERY_TOOLS);
                     peter.assignmentTo(Assignment.COOK_SALAD,barlow);
                     peter.goTo(outside);
+                    barlow.goTo(outside);
+                    barlow.grumbleBecauseOfEvent(fight);
                     jeremy.toHorse(charcoal);
                     peter.toHorse(charcoal);
                     jeremy.goTo(lordHouse,jeremy.getHorse());
@@ -161,9 +196,5 @@ class TimeLine {
             barlow.putOnTable(Food.CHICKEN);
             peter.eat(Food.CHICKEN);
         }
-
-
-
     }
-
 }

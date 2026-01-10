@@ -34,6 +34,10 @@ public class Hostess extends Person implements Assignable{
         this.foodInventory = new ArrayList<>();
     }
 
+    public void grumbleBecauseOfEvent(Event event){
+        System.out.println(this+" кудахчет из-за "+ event);
+    }
+
     public void cook(Food food){
         if (this.getPlace().getPlaceType() == PlaceType.BLOOD_HOUSE){
             this.putToInv(food);

@@ -19,7 +19,7 @@ public class Skipper extends Rider implements Actionable{
     public Skipper() {
         this(
                 "Jeremy",
-                TimeLine.getPlace(new Place(PlaceType.OUTSIDE)),
+                null,
                 Mood.WORRIED,
                 50,
                 Profession.SKIPPER,
@@ -63,7 +63,6 @@ public class Skipper extends Rider implements Actionable{
             );
             System.out.println(atHome + " в "+place+" обеспокоены!");
         }
-
     }
 
     public boolean doActionTo(Action action,Actionable person) {

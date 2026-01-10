@@ -57,7 +57,24 @@ public abstract class Person implements MovablePerson {
         }
     }
 
-    private void tellAboutEvTo(Event event) {
+    private void tellAboutEvTo(Event event,Person person) {
+        ArrayList<Person> persList = new ArrayList<>(person.getPlace().getPersons());
+        persList.remove(this);
+        String printable = String.join(", ",
+                persList
+                .stream()
+                .map(Person::getName)
+                .toArray(String[]::new));
+        System.out.println(this+" рассказывает " + printable + " о событии "+ event);
+
+
+        for (Person p: persList){
+            if (this.equals(p)){
+                continue;
+            }
+            p.addEvent(event);
+        }
+
         if (event.evName() == EventName.HELP_ME) {
             String victims = "";
             for (Person pe : event.evPersons()) {
@@ -105,19 +122,26 @@ public abstract class Person implements MovablePerson {
                     "в ней были: " + crowd +
                     "\nЭто " + event.evNature());
         }
+
+        for (Person p: persList){
+            if (this.equals(p)){
+                continue;
+            }
+            if (event.evNature() == Nature.BAD) {
+                p.setMood(Mood.SAD);
+                System.out.println(event.evName() + " влияет на " + p + ". Его настроение стало " + Mood.SAD);
+            }
+        }
     }
 
     public void askAboutEvTo(Event event, Person person) {
+        if (person.equals(this)){
+            return;
+        }
         if (this.getPlace().getPlaceType() == person.getPlace().getPlaceType() ||
                 person.getPlace().getPlaceType() == PlaceType.OUTSIDE) {
-            System.out.println(person + " говорит " +
-                    this + " о событии " + event.evName());
-            person.tellAboutEvTo(event);
-
-            if (event.evNature() == Nature.BAD) {
-                this.setMood(Mood.SAD);
-                System.out.println(event.evName() + " влияет на " + this + ". Его настроение стало " + Mood.SAD);
-            }
+            System.out.println(this + " спрашивает " + person + " о событии " + event.evName());
+            person.tellAboutEvTo(event,this);
         }
     }
 
@@ -162,30 +186,16 @@ public abstract class Person implements MovablePerson {
 
     }
 
-    public Mood getMood() {
-        return mood;
-    }
-
     public void setMood(Mood mood) {
         this.mood = mood;
     }
 
-    public ArrayList<Relationship> getAllRelationships() {
-        return relationships;
-    }
 
     public void addRelationship(Person relWith, ERelationship relationship) {
         this.relationships.add(new Relationship(relWith, this, relationship));
         relWith.relationships.add(new Relationship(this, relWith, relationship));
     }
 
-    public int getHunger() {
-        return hunger;
-    }
-
-    public void setHunger(int hunger) {
-        this.hunger = hunger;
-    }
 
     public Place getPlace() {
         return place;
@@ -205,9 +215,6 @@ public abstract class Person implements MovablePerson {
         return profession;
     }
 
-    public void setProfession(Profession profession) {
-        this.profession = profession;
-    }
 
     public Clothes getClothes() {
         return new Clothes(this.clothes);
@@ -224,17 +231,6 @@ public abstract class Person implements MovablePerson {
         System.out.println(this + " переодевается в " + clothes);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
 
     public ArrayList<Event> getEvents() {
         return events;

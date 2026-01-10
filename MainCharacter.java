@@ -19,7 +19,7 @@ public class MainCharacter extends Rider implements Actionable{
     public MainCharacter() {
         this(
                 "Peter",
-                TimeLine.getPlace(new Place(PlaceType.BLOOD_HOUSE)),
+                null,
                 Mood.CALM,
                 30,
                 Profession.DOCTOR,
@@ -79,17 +79,4 @@ public class MainCharacter extends Rider implements Actionable{
         System.out.println(this+" не готов(");
         return false;
     }
-
-    @Override
-    public boolean doActionTo(Action action, Actionable person) {
-        if (new Random().nextInt(11) < 5) {
-            System.out.println(this + " " + action);
-            return true;
-        } else {
-            System.out.println(this + " не " + action);
-            return false;
-        }
-    }
-
-
 }
